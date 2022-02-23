@@ -22,26 +22,50 @@ def cfDecodeEmail(encodedString):
 
 def GSparser(profile):
     url=profile['GSurl']
-    page = requests.get(url, verify=False, headers=headers).text
+    page = requests.get(url, verify=False, headers=headers).text.strip()
     soup = BeautifulSoup(page, 'html.parser')
-    labels =soup.find('div',class_="gsc_prf_il",id="gsc_prf_int").find_all('a',class_='gsc_prf_inta gs_ibl')
-    profile['GSinterests']=''
-    for item in labels:
-         profile['GSinterests']=  profile['GSinterests']+', '+item.text 
+    try: 
+        labels =soup.find('div',class_="gsc_prf_il",id="gsc_prf_int").find_all('a',class_='gsc_prf_inta gs_ibl')
+        profile['GSinterests']=''
+        for item in labels:
+            profile['GSinterests']=  profile['GSinterests']+', '+item.text.strip()
+    except: 
+        pass
 
-    ranking =soup.find('table',id="gsc_rsb_st").find('tbody').find_all('td', class_="gsc_rsb_std")
-    rankingList=[]
-    for item in ranking:
-        rankingList.append(item.text)
-    profile['GScitationAll']=rankingList[0]
-    profile['GShindexAll']=[rankingList[2]]
-    profile['GSi10indexAll']=rankingList[4]
-    profile['GScitation5yr']=rankingList[1]
-    profile['GShindex5yr']=rankingList[3]
-    profile['GSi10index5yr']=rankingList[5]
+    try:
+        ranking =soup.find('table',id="gsc_rsb_st").find('tbody').find_all('td', class_="gsc_rsb_std")
+        
+        rankingList=[]
+        for item in ranking:
+            try:
+                rankingList.append(item.text.strip())
+            except: 
+                rankingList.append(NaN)
+    except:
+        rankingList=[NaN,NaN,NaN,NaN,NaN,NaN]
 
-    profile['GSname']=soup.find('div',id="gsc_prf_in").text
-    profile['GSphoto']= soup.find('img',id="gsc_prf_pup-img")['src']
+    try:
+        profile['GScitationAll']=rankingList[0]
+        profile['GShindexAll']=[rankingList[2]]
+        profile['GSi10indexAll']=rankingList[4]
+        profile['GScitation5yr']=rankingList[1]
+        profile['GShindex5yr']=rankingList[3]
+        profile['GSi10index5yr']=rankingList[5]
+    except:
+        pass
+
+
+
+
+    try:
+        profile['GSname']=soup.find('div',id="gsc_prf_in").text.strip()
+    except:
+        pass
+
+    try:    
+        profile['GSphoto']= soup.find('img',id="gsc_prf_pup-img")['src']
+    except:
+        pass
 
     return(profile)
 
@@ -56,7 +80,7 @@ def getGoogleUrl(keyword):
     html_doc= page.text
     soup = BeautifulSoup(html_doc, 'html.parser')
     # print(soup.prettify)
-    print(googleSearchUrl)
+    # print(googleSearchUrl)
     googleScholarPage=soup.find_all('a',href=True)
     for i in googleScholarPage:
         if 'https://scholar.google.com/citations?'in i['href']:
@@ -307,8 +331,8 @@ def main():
     })
 
     pdFullList=AUS_scrapper(pdFullList)
-    pdFullList=KU_scrapper(pdFullList)
-    pdFullList=NYUAD_scrapper(pdFullList)
+    # pdFullList=KU_scrapper(pdFullList)
+    # pdFullList=NYUAD_scrapper(pdFullList)
 
     #parse google scholar page data for all scholars with available GS page
     for index, row in pdFullList.iterrows():
@@ -319,8 +343,4 @@ def main():
     
 if __name__=='__main__':
     main()
-
-
-
-
 
