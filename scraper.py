@@ -4,6 +4,9 @@ from numpy import NaN
 import requests
 import pandas as pd
 from datetime import datetime 
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) # disable warning for unverified http requests 
+
 
 #http request header 
 headers = {   
