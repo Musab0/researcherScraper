@@ -10,7 +10,6 @@ headers = {
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36'
 }
 
-
 #decodes protected email address (AUS emails for example)
 def cfDecodeEmail(encodedString):  
     r = int(encodedString[:2],16)
@@ -59,7 +58,7 @@ def getGoogleUrl(keyword):
     for i in googleScholarPage:
         if 'https://scholar.google.com/citations?'in i['href']:
             return i['href']
-    return 0
+    return NaN
 
 def getNextPageAUS(soup):
     nextPage=soup.find('a',title="Go to next page")
@@ -284,23 +283,23 @@ def NYUAD_scrapper(pdFullList):
 def main():
 
     pdFullList=pd.DataFrame({
-            'entity':['KU'],       
-            'name': ['Erno'],
-            'img': [NaN],
-            'title': [NaN],
-            'page': [NaN],
-            'email':[NaN],
-            'phone':[NaN],
-            'GSurl':['https://scholar.google.com/citations?user=yQEz-KsAAAAJ&hl=en'],
-            'GSname':[NaN],
-            'GSphoto':[NaN],
-            'GSinterests':[NaN],
-            'GScitationAll':[NaN],
-            'GScitation5yr':[NaN],
-            'GShindexAll':[NaN],
-            'GShindex5yr':[NaN],
-            'GSi10indexAll':[NaN],
-            'GSi10index5yr':[NaN]
+            'entity':[],       
+            'name': [],
+            'img': [],
+            'title': [],
+            'page': [],
+            'email':[],
+            'phone':[],
+            'GSurl':[],
+            'GSname':[],
+            'GSphoto':[],
+            'GSinterests':[],
+            'GScitationAll':[],
+            'GScitation5yr':[],
+            'GShindexAll':[],
+            'GShindex5yr':[],
+            'GSi10indexAll':[],
+            'GSi10index5yr':[]
 
     })
 
@@ -310,7 +309,7 @@ def main():
 
     #parse google scholar page data for all scholars with available GS page
     for index, row in pdFullList.iterrows():
-        if row['GSurl']:  
+        if (row['GSurl'] is not NaN) and (row['GSurl'] is not 0):  
             pdFullList[index:]=GSparser(row)
 
     pdFullList.to_csv('scraped{}.csv'.format(datetime.now().strftime('%Y%m%d%H%M')), index=False)
