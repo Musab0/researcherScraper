@@ -55,8 +55,6 @@ def GSparser(profile):
         pass
 
 
-
-
     try:
         profile['GSname']=soup.find('div',id="gsc_prf_in").text.strip()
     except:
@@ -69,8 +67,6 @@ def GSparser(profile):
 
     return(profile)
 
-
-    
 
 def getGoogleUrl(keyword):
 
@@ -336,7 +332,7 @@ def main():
 
     #parse google scholar page data for all scholars with available GS page
     for index, row in pdFullList.iterrows():
-        if validators.url(row['GSurl']):  
+        if validators.url(str(row['GSurl'])):  
             pdFullList[index:]=GSparser(row)
 
     pdFullList.to_csv('scraped{}.csv'.format(datetime.now().strftime('%Y%m%d%H%M')), index=False)
