@@ -327,8 +327,8 @@ def main():
     })
 
     pdFullList=AUS_scrapper(pdFullList)
-    # pdFullList=KU_scrapper(pdFullList)
-    # pdFullList=NYUAD_scrapper(pdFullList)
+    pdFullList=KU_scrapper(pdFullList)
+    pdFullList=NYUAD_scrapper(pdFullList)
 
     #parse google scholar page data for all scholars with available GS page
     for index, row in pdFullList.iterrows():
