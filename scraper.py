@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) # disable warning for unverified http requests 
-
+import validators
 
 #http request header 
 headers = {   
@@ -336,7 +336,7 @@ def main():
 
     #parse google scholar page data for all scholars with available GS page
     for index, row in pdFullList.iterrows():
-        if (row['GSurl'] is not NaN) and (row['GSurl'] is not 0):  
+        if validators.url(row['GSurl']):  
             pdFullList[index:]=GSparser(row)
 
     pdFullList.to_csv('scraped{}.csv'.format(datetime.now().strftime('%Y%m%d%H%M')), index=False)
